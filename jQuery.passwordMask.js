@@ -3,7 +3,8 @@
 	  
 		var defaults = {
 			hidden: true,
-			checkboxlabel: 'show password'
+			checkboxlabel: 'show password',
+			setfocus: false
 		},
 		settings = $.extend({}, defaults, options);
 		
@@ -28,6 +29,14 @@
 			
 			check.bind('change', function(){
 				toggleInputs($this, hidden);
+				if (settings.setfocus) {
+          var previnput = $(this).prev();
+          if (previnput.is(':hidden')) {
+            previnput.prev().focus();
+          } else {
+            previnput.focus();
+          }
+        }
 			});
 
 		});
