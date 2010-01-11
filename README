@@ -17,7 +17,10 @@ $('input[type="password"]').passwordMask();
 Options
 -------------------------------------
 Hidden - makes the default behaviour to show the passwords in plaintext
-$('input[type="password"]').passwordMask({ hidden: false });
+$('input:password').passwordMask({ hidden: false });
 
-Checkbox label - defaults to 'Show password'
-$('input[type="password"]').passwordMask({ checkboxlabel: 'Show password in plaintext' });
+Checkbox label - defaults to 'show password'
+$('input:password').passwordMask({ checkboxlabel: 'Show password in plaintext' });
+
+Set cursor focus onto the input box after the checkbox is ticked - defaults to false
+$('input:password').passwordMask({ setfocus: true });
