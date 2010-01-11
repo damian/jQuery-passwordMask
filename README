@@ -12,7 +12,7 @@ of a checkbox.
 
 Usage
 -------------------------------------
-$('input[type="password"]').passwordMask();
+$('input:password').passwordMask();
 
 Options
 -------------------------------------
