@@ -3,40 +3,61 @@
 	  
 		var defaults = {
 			hidden: true,
-			checkboxlabel: 'Show password'
+			checkboxlabel: 'show password'
 		},
 		settings = $.extend({}, defaults, options);
 		
-		this.each(function() {
+		this.each(function(i) {
 			var $this = $(this);
-			var name = $(this).attr('name');
+			var check = $('<input type="checkbox" />');
+      var label = $('<label />').text(settings.checkboxlabel);
+      var hidden = cloneOriginalInput($this);
 			
-			var check = $('<input type="checkbox" name="checkbox" value="" id="checkbox"><label for="checkbox">' + settings.checkboxlabel + '</label><br/>');
-			var hidden = $('<input type="text" name="' + name + '" value="" id="pwd-hidden">');
+			linkUpCheckboxToLabel(check, label, 'checkbox-' + i);
+
 			check.insertAfter($this);
-			hidden.insertAfter($this).hide();
+			label.insertAfter(check);
+			hidden.insertAfter($this);
 			
 			if (!settings.hidden) {
 				check.attr('checked', true);
 				toggleInputs($this, hidden);
 			}
+
+			passwordCopy($this, hidden);
 			
-			// TODO : Refactor these keyups in to a function as theyre both doing the same thing
-			$this.bind('keyup', function(){
-				hidden.attr('value', $(this).attr('value'));
-			});
-			
-			hidden.bind('keyup', function(){
-				$this.attr('value', $(this).attr('value'));
-			});
-			
-			check.bind('click', function(){
+			check.bind('change', function(){
 				toggleInputs($this, hidden);
 			});
-			
+
 		});
 		return this;
 	};
+	
+	function cloneOriginalInput(elem)
+	{
+	  var clone = $('<input type="text" />');
+	  clone.addClass(elem.attr('class'));
+	  clone.css('display', 'none');
+    return clone;
+	}
+	
+	function linkUpCheckboxToLabel(checkbox, label, forstring)
+	{
+	  checkbox.attr('id', forstring);
+	  label.attr('for', forstring);
+	}
+	
+	function passwordCopy(elem1, elem2)
+	{
+	  elem1.bind('keyup', function(){
+	    elem2.val($(this).val());
+	  });
+	  
+	  elem2.bind('keyup', function(){
+	    elem1.val($(this).val());
+	  });
+	}
 	
 	function toggleInputs(elem1, elem2)
 	{
