@@ -6,21 +6,4 @@ http://twitter.com/damian
 
 Info
 -------------------------------------
-Allows a user to see their password in plaintext if they're unsure
-that they've typed it correctly. This is toggled through the use
-of a checkbox.
-
-Usage
--------------------------------------
-$('input:password').passwordMask();
-
-Options
--------------------------------------
-Hidden - makes the default behaviour to show the passwords in plaintext
-$('input:password').passwordMask({ hidden: false });
-
-Checkbox label - defaults to 'show password'
-$('input:password').passwordMask({ checkboxlabel: 'Show password in plaintext' });
-
-Set cursor focus onto the input box after the checkbox is ticked - defaults to false
-$('input:password').passwordMask({ setfocus: true });
+Allows a user to see their password in plaintext if they're unsure that they've typed it correctly. This is toggled through the use of a checkbox.

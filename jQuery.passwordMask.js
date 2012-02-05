@@ -1,77 +1,58 @@
 (function() {
-	$.fn.passwordMask = function(options) {
-	  
-		var defaults = {
-			hidden: true,
-			checkboxlabel: 'show password',
-			setfocus: false
-		},
-		settings = $.extend({}, defaults, options);
-		
-		this.each(function(i) {
-			var $this = $(this);
-			var check = $('<input type="checkbox" />');
-      var label = $('<label />').text(settings.checkboxlabel);
-      var hidden = cloneOriginalInput($this);
-			
-			linkUpCheckboxToLabel(check, label, 'checkbox-' + i);
+  var PasswordMask;
 
-			check.insertAfter($this);
-			label.insertAfter(check);
-			hidden.insertAfter($this);
-			
-			if (!settings.hidden) {
-				check.attr('checked', true);
-				toggleInputs($this, hidden);
-			}
+  PasswordMask = (function() {
 
-			passwordCopy($this, hidden);
-			
-			check.bind('change', function(){
-				toggleInputs($this, hidden);
-				if (settings.setfocus) {
-          var previnput = $(this).prev();
-          if (previnput.is(':hidden')) {
-            previnput.prev().focus();
-          } else {
-            previnput.focus();
-          }
-        }
-			});
+    function PasswordMask(passwordInput) {
+      this.passwordInput = passwordInput;
+      this.createTextInput();
+      this.createCheckbox();
+      this.setInitialTextInput();
+      this.setupEvents();
+    }
 
-		});
-		return this;
-	};
-	
-	function cloneOriginalInput(elem)
-	{
-	  var clone = $('<input type="text" />');
-	  clone.addClass(elem.attr('class'));
-	  clone.css('display', 'none');
-    return clone;
-	}
-	
-	function linkUpCheckboxToLabel(checkbox, label, forstring)
-	{
-	  checkbox.attr('id', forstring);
-	  label.attr('for', forstring);
-	}
-	
-	function passwordCopy(elem1, elem2)
-	{
-	  elem1.bind('keyup', function(){
-	    elem2.val($(this).val());
-	  });
-	  
-	  elem2.bind('keyup', function(){
-	    elem1.val($(this).val());
-	  });
-	}
-	
-	function toggleInputs(elem1, elem2)
-	{
-		elem1.toggle();
-		elem2.toggle();
-	}
+    PasswordMask.prototype.createTextInput = function() {
+      this.textInput = $('<input type="text" />');
+      return this.textInput.insertAfter(this.passwordInput).hide();
+    };
 
-})(jQuery);
+    PasswordMask.prototype.setInitialTextInput = function() {
+      return this.textInput.val(this.passwordInput.val());
+    };
+
+    PasswordMask.prototype.createCheckbox = function() {
+      var html, passwordId;
+      passwordId = this.passwordInput.attr('id');
+      html = "<input type=\"checkbox\" id=\"" + passwordId + "-checkbox\">\n<label for=\"" + passwordId + "-checkbox\">show password</label>";
+      this.textInput.after(html);
+      return this.checkboxInput = this.textInput.next();
+    };
+
+    PasswordMask.prototype.setupEvents = function() {
+      var _this = this;
+      this.passwordInput.bind('keyup', function(event) {
+        return _this.textInput.val(_this.passwordInput.val());
+      });
+      this.textInput.bind('keyup', function(event) {
+        return _this.passwordInput.val(_this.textInput.val());
+      });
+      return this.checkboxInput.on('click', function(event) {
+        _this.passwordInput.toggle();
+        return _this.textInput.toggle();
+      });
+    };
+
+    return PasswordMask;
+
+  })();
+
+  $(function() {
+    var _this = this;
+    return $('input:password').each(function(ind, el) {
+      var $this;
+      $this = $(el);
+      return new PasswordMask($this);
+    });
+  });
+
+}).call(this);
